@@ -1,29 +1,35 @@
-const Trip = require('../models/Trip');
-const { generateTripPlan } = require('../services/aiService');
+const { generateTripPlan, generateZeroShotTripPlan } = require('../services/aiService');
 
-const generateItinerary = async (req, res) => {
-  const { city, startDate } = req.body;
-
-  if (!city || !startDate) {
-    return res.status(400).json({ success: false, message: 'City and startDate are required' });
-  }
-
+/**
+ * POST /api/ai/generate
+ * System & User Prompt endpoint
+ * Body: { city: "Delhi", startDate: "2025-09-01" }
+ */
+const systemUserPromptHandler = async (req, res) => {
   try {
-    const itinerary = await generateTripPlan(city, startDate);
-
-    // Save to DB
-    const trip = new Trip({
-      city,
-      startDate,
-      itinerary
-    });
-    await trip.save();
-
-    res.json({ success: true, itinerary });
+    const { city, startDate } = req.body;
+    const tripPlan = await generateTripPlan(city, startDate);
+    res.json(tripPlan);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: 'AI generation failed' });
+    console.error('System/User Prompt generation failed:', error);
+    res.status(500).json({ error: 'Failed to generate itinerary' });
   }
 };
 
-module.exports = { generateItinerary };
+/**
+ * POST /api/ai/zero-shot
+ * Zero-Shot Prompting endpoint
+ * Body: { city: "Mumbai", startDate: "2025-09-05" }
+ */
+const zeroShotHandler = async (req, res) => {
+  try {
+    const { city, startDate } = req.body;
+    const tripPlan = await generateZeroShotTripPlan(city, startDate);
+    res.json(tripPlan);
+  } catch (error) {
+    console.error('Zero-Shot generation failed:', error);
+    res.status(500).json({ error: 'Failed to generate Zero-Shot itinerary' });
+  }
+};
+
+module.exports = { systemUserPromptHandler, zeroShotHandler };

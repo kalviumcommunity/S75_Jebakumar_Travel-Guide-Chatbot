@@ -2,29 +2,30 @@
 const { systemPrompt, createUserPrompt } = require('../utils/prompts');
 
 /**
- * generateTripPlan
- * Currently returns dummy itinerary but uses the prompt structure.
+ * generateZeroShotTripPlan
+ * Zero-Shot Prompting: AI generates itinerary purely from instructions, no examples given
  * @param {string} city
  * @param {string} startDate
  * @returns {Object} structured trip JSON
  */
-const generateTripPlan = async (city, startDate) => {
-  // Generate dynamic user prompt
+const generateZeroShotTripPlan = async (city, startDate) => {
+  // Dynamic user prompt for Zero-Shot
   const userPrompt = createUserPrompt(city, startDate);
 
   // Log prompts for verification
-  console.log('--- SYSTEM PROMPT ---\n', systemPrompt);
-  console.log('--- USER PROMPT ---\n', userPrompt);
+  console.log('--- SYSTEM PROMPT (Zero-Shot) ---\n', systemPrompt);
+  console.log('--- USER PROMPT (Zero-Shot) ---\n', userPrompt);
 
-  // Dummy structured JSON (replace with AI call later)
+  // Dummy structured JSON simulating Zero-Shot response
   return {
     city,
     startDate,
     itinerary: [
-      { day: 1, activities: ['Visit main square', 'Lunch at local cafe'], tips: 'Wear comfortable shoes' },
-      { day: 2, activities: ['Museum visit', 'Evening walk by river'], tips: 'Carry water bottle' }
+      { day: 1, activities: ['Arrival & hotel check-in', 'Explore nearby market'], tips: 'Keep luggage light' },
+      { day: 2, activities: ['Visit historical sites', 'Evening at local park'], tips: 'Take camera for photos' },
+      { day: 3, activities: ['Museum tour', 'Local cuisine tasting'], tips: 'Try street food safely' }
     ]
   };
 };
 
-module.exports = { generateTripPlan };
+module.exports = { generateZeroShotTripPlan };

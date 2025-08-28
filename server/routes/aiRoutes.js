@@ -1,8 +1,11 @@
 const express = require('express');
-const { generateItinerary } = require('../controllers/aiController');
-
 const router = express.Router();
+const { systemUserPromptHandler, zeroShotHandler } = require('../controllers/aiController');
 
-router.post('/generate', generateItinerary);
+// System & User Prompt endpoint
+router.post('/generate', systemUserPromptHandler);
+
+// Zero-Shot Prompting endpoint
+router.post('/zero-shot', zeroShotHandler);
 
 module.exports = router;
