@@ -1,13 +1,12 @@
+// controllers/aiController.js
 const {
   generateZeroShotTripPlan,
   generateOneShotTripPlan,
   generateMultiShotTripPlan,
-  generateDynamicPromptTripPlan
+  generateDynamicPromptTripPlan,
+  generateChainOfThoughtTripPlan
 } = require('../services/aiService');
 
-/**
- * Zero-Shot Endpoint Handler
- */
 const zeroShotHandler = async (req, res) => {
   try {
     const { city, startDate } = req.body;
@@ -19,9 +18,6 @@ const zeroShotHandler = async (req, res) => {
   }
 };
 
-/**
- * One-Shot Endpoint Handler
- */
 const oneShotHandler = async (req, res) => {
   try {
     const { city, startDate } = req.body;
@@ -33,9 +29,6 @@ const oneShotHandler = async (req, res) => {
   }
 };
 
-/**
- * Multi-Shot Endpoint Handler
- */
 const multiShotHandler = async (req, res) => {
   try {
     const { city, startDate } = req.body;
@@ -47,9 +40,6 @@ const multiShotHandler = async (req, res) => {
   }
 };
 
-/**
- * Dynamic Prompt Endpoint Handler
- */
 const dynamicPromptHandler = async (req, res) => {
   try {
     const { city, startDate, preferences } = req.body;
@@ -61,9 +51,21 @@ const dynamicPromptHandler = async (req, res) => {
   }
 };
 
+const chainOfThoughtHandler = async (req, res) => {
+  try {
+    const { city, startDate } = req.body;
+    const tripPlan = await generateChainOfThoughtTripPlan(city, startDate);
+    res.json(tripPlan);
+  } catch (error) {
+    console.error('Chain-of-Thought generation failed:', error);
+    res.status(500).json({ error: 'Failed to generate Chain-of-Thought itinerary' });
+  }
+};
+
 module.exports = {
   zeroShotHandler,
   oneShotHandler,
   multiShotHandler,
-  dynamicPromptHandler
+  dynamicPromptHandler,
+  chainOfThoughtHandler
 };
