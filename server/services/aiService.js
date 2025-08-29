@@ -65,7 +65,51 @@ Provide a structured 3-day itinerary with activities and tips.
   };
 };
 
+const generateMultiShotTripPlan = async (city, startDate) => {
+  const examples = [
+    {
+      city: 'ExampleCity1',
+      startDate: '2025-09-01',
+      itinerary: [
+        { day: 1, activities: ['Museum visit'], tips: ['Carry water'] },
+        { day: 2, activities: ['City walk'], tips: ['Use sunscreen'] }
+      ]
+    },
+    {
+      city: 'ExampleCity2',
+      startDate: '2025-10-01',
+      itinerary: [
+        { day: 1, activities: ['Park visit'], tips: ['Wear comfortable shoes'] },
+        { day: 2, activities: ['Local market'], tips: ['Carry snacks'] }
+      ]
+    }
+  ];
+
+  const userPrompt = `
+Plan a ${city} trip starting on ${startDate}.
+Follow these examples exactly:
+${JSON.stringify(examples)}
+Provide a structured 3-day itinerary with activities and tips.
+`;
+
+  console.log('System Prompt:', systemPrompt);
+  console.log('User Prompt (Multi-Shot):', userPrompt);
+
+  // Dummy structured JSON response
+  return {
+    city,
+    startDate,
+    itinerary: [
+      { day: 1, activities: ['Local landmark visit'], tips: ['Take photos'] },
+      { day: 2, activities: ['Museum tour'], tips: ['Wear comfortable shoes'] },
+      { day: 3, activities: ['Park visit'], tips: ['Carry snacks'] }
+    ]
+  };
+};
+
+
 module.exports = {
   generateZeroShotTripPlan,
-  generateOneShotTripPlan
+  generateOneShotTripPlan,
+  generateMultiShotTripPlan
 };

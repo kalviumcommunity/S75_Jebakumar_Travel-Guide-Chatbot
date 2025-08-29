@@ -1,6 +1,7 @@
 const {
   generateZeroShotTripPlan,
-  generateOneShotTripPlan
+  generateOneShotTripPlan,
+  generateMultiShotTripPlan
 } = require('../services/aiService');
 
 /**
@@ -31,7 +32,20 @@ const oneShotHandler = async (req, res) => {
   }
 };
 
+const multiShotHandler = async (req, res) => {
+  try {
+    const { city, startDate } = req.body;
+    const tripPlan = await generateMultiShotTripPlan(city, startDate);
+    res.json(tripPlan);
+  } catch (error) {
+    console.error('Multi-Shot generation failed:', error);
+    res.status(500).json({ error: 'Failed to generate Multi-Shot itinerary' });
+  }
+};
+
+
 module.exports = {
   zeroShotHandler,
-  oneShotHandler
+  oneShotHandler,
+  multiShotHandler
 };
