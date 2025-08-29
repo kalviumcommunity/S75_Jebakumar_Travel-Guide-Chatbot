@@ -1,4 +1,3 @@
-// controllers/aiController.js
 const {
   generateZeroShotTripPlan,
   generateOneShotTripPlan,
@@ -6,6 +5,7 @@ const {
   generateDynamicPromptTripPlan,
   generateChainOfThoughtTripPlan
 } = require('../services/aiService');
+
 
 const zeroShotHandler = async (req, res) => {
   try {
@@ -29,6 +29,7 @@ const oneShotHandler = async (req, res) => {
   }
 };
 
+
 const multiShotHandler = async (req, res) => {
   try {
     const { city, startDate } = req.body;
@@ -39,6 +40,7 @@ const multiShotHandler = async (req, res) => {
     res.status(500).json({ error: 'Failed to generate Multi-Shot itinerary' });
   }
 };
+
 
 const dynamicPromptHandler = async (req, res) => {
   try {
