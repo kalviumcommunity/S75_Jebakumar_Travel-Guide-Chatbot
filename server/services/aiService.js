@@ -4,9 +4,6 @@ const { systemPrompt, createZeroShotPrompt } = require('../utils/prompts');
 
 /**
  * Generate itinerary using Zero-Shot Prompting
- * @param {string} city
- * @param {string} startDate
- * @returns {object} structured JSON itinerary
  */
 const generateZeroShotTripPlan = async (city, startDate) => {
   const userPrompt = createZeroShotPrompt(city, startDate);
@@ -14,7 +11,6 @@ const generateZeroShotTripPlan = async (city, startDate) => {
   console.log('System Prompt:', systemPrompt);
   console.log('User Prompt (Zero-Shot):', userPrompt);
 
-  // Dummy structured JSON response
   return {
     city,
     startDate,
@@ -28,12 +24,8 @@ const generateZeroShotTripPlan = async (city, startDate) => {
 
 /**
  * Generate itinerary using One-Shot Prompting
- * @param {string} city
- * @param {string} startDate
- * @returns {object} structured JSON itinerary
  */
 const generateOneShotTripPlan = async (city, startDate) => {
-  // Example JSON to guide the AI
   const example = {
     city: 'ExampleCity',
     startDate: '2025-09-01',
@@ -53,7 +45,6 @@ Provide a structured 3-day itinerary with activities and tips.
   console.log('System Prompt:', systemPrompt);
   console.log('User Prompt (One-Shot):', userPrompt);
 
-  // Dummy structured JSON response
   return {
     city,
     startDate,
@@ -65,6 +56,9 @@ Provide a structured 3-day itinerary with activities and tips.
   };
 };
 
+/**
+ * Generate itinerary using Multi-Shot Prompting
+ */
 const generateMultiShotTripPlan = async (city, startDate) => {
   const examples = [
     {
@@ -95,7 +89,6 @@ Provide a structured 3-day itinerary with activities and tips.
   console.log('System Prompt:', systemPrompt);
   console.log('User Prompt (Multi-Shot):', userPrompt);
 
-  // Dummy structured JSON response
   return {
     city,
     startDate,
@@ -107,9 +100,33 @@ Provide a structured 3-day itinerary with activities and tips.
   };
 };
 
+/**
+ * Generate itinerary using Dynamic Prompting
+ */
+const generateDynamicPromptTripPlan = async (city, startDate, preferences = []) => {
+  const userPrompt = `
+Plan a trip to ${city} starting on ${startDate}.
+User preferences: ${preferences.join(', ')}.
+Return a structured JSON itinerary (3 days) with activities and tips.
+`;
+
+  console.log('System Prompt:', 'Dynamic Prompting System Message');
+  console.log('User Prompt (Dynamic):', userPrompt);
+
+  return {
+    city,
+    startDate,
+    itinerary: [
+      { day: 1, activities: ['Local landmark visit'], tips: ['Take photos'] },
+      { day: 2, activities: ['Museum tour'], tips: ['Wear comfortable shoes'] },
+      { day: 3, activities: ['Park visit'], tips: ['Carry snacks'] }
+    ]
+  };
+};
 
 module.exports = {
   generateZeroShotTripPlan,
   generateOneShotTripPlan,
-  generateMultiShotTripPlan
+  generateMultiShotTripPlan,
+  generateDynamicPromptTripPlan
 };
