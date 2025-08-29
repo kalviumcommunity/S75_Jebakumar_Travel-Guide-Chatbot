@@ -1,5 +1,4 @@
 // routes/aiRoutes.js
-
 const express = require('express');
 const router = express.Router();
 
@@ -7,27 +6,20 @@ const router = express.Router();
 const {
   zeroShotHandler,
   oneShotHandler,
-    multiShotHandler
+  multiShotHandler,
+  dynamicPromptHandler
 } = require('../controllers/aiController');
 
-// --------------------
-// AI Prompt Endpoints
-// --------------------
-
-// Zero-Shot Prompt
-// POST /api/ai/zero-shot
+// Zero-Shot
 router.post('/zero-shot', zeroShotHandler);
 
-// One-Shot Prompt
-// POST /api/ai/one-shot
+// One-Shot
 router.post('/one-shot', oneShotHandler);
 
-// Multi-Shot Prompt
-// POST /api/ai/multi-shot
+// Multi-Shot
 router.post('/multi-shot', multiShotHandler);
 
-
-// Future endpoints (Multi-Shot, Chain-of-Thought, etc.) can be added here
-// e.g., router.post('/multi-shot', multiShotHandler);
+// Dynamic Prompt
+router.post('/dynamic-prompt', dynamicPromptHandler);
 
 module.exports = router;

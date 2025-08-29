@@ -1,7 +1,8 @@
 const {
   generateZeroShotTripPlan,
   generateOneShotTripPlan,
-  generateMultiShotTripPlan
+  generateMultiShotTripPlan,
+  generateDynamicPromptTripPlan
 } = require('../services/aiService');
 
 /**
@@ -32,6 +33,9 @@ const oneShotHandler = async (req, res) => {
   }
 };
 
+/**
+ * Multi-Shot Endpoint Handler
+ */
 const multiShotHandler = async (req, res) => {
   try {
     const { city, startDate } = req.body;
@@ -43,9 +47,23 @@ const multiShotHandler = async (req, res) => {
   }
 };
 
+/**
+ * Dynamic Prompt Endpoint Handler
+ */
+const dynamicPromptHandler = async (req, res) => {
+  try {
+    const { city, startDate, preferences } = req.body;
+    const tripPlan = await generateDynamicPromptTripPlan(city, startDate, preferences || []);
+    res.json(tripPlan);
+  } catch (error) {
+    console.error('Dynamic Prompt generation failed:', error);
+    res.status(500).json({ error: 'Failed to generate Dynamic Prompt itinerary' });
+  }
+};
 
 module.exports = {
   zeroShotHandler,
   oneShotHandler,
-  multiShotHandler
+  multiShotHandler,
+  dynamicPromptHandler
 };
