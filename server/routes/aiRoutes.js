@@ -1,13 +1,12 @@
 // routes/aiRoutes.js
 const express = require('express');
 const router = express.Router();
-
-// Import controller handlers
 const {
   zeroShotHandler,
   oneShotHandler,
   multiShotHandler,
-  dynamicPromptHandler
+  dynamicPromptHandler,
+  chainOfThoughtHandler
 } = require('../controllers/aiController');
 
 // Zero-Shot
@@ -21,5 +20,8 @@ router.post('/multi-shot', multiShotHandler);
 
 // Dynamic Prompt
 router.post('/dynamic-prompt', dynamicPromptHandler);
+
+// Chain-of-Thought
+router.post('/chain-of-thought', chainOfThoughtHandler);
 
 module.exports = router;

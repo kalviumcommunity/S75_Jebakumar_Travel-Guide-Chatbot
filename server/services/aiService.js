@@ -1,9 +1,8 @@
 // services/aiService.js
-
 const { systemPrompt, createZeroShotPrompt } = require('../utils/prompts');
 
 /**
- * Generate itinerary using Zero-Shot Prompting
+ * Zero-Shot Prompting
  */
 const generateZeroShotTripPlan = async (city, startDate) => {
   const userPrompt = createZeroShotPrompt(city, startDate);
@@ -17,13 +16,13 @@ const generateZeroShotTripPlan = async (city, startDate) => {
     itinerary: [
       { day: 1, activities: ['Local landmark visit'], tips: ['Take photos'] },
       { day: 2, activities: ['Museum tour'], tips: ['Wear comfortable shoes'] },
-      { day: 3, activities: ['Park visit'], tips: ['Carry snacks'] }
-    ]
+      { day: 3, activities: ['Park visit'], tips: ['Carry snacks'] },
+    ],
   };
 };
 
 /**
- * Generate itinerary using One-Shot Prompting
+ * One-Shot Prompting
  */
 const generateOneShotTripPlan = async (city, startDate) => {
   const example = {
@@ -31,8 +30,8 @@ const generateOneShotTripPlan = async (city, startDate) => {
     startDate: '2025-09-01',
     itinerary: [
       { day: 1, activities: ['Visit museum', 'City walk'], tips: ['Carry water'] },
-      { day: 2, activities: ['Park visit', 'Local market'], tips: ['Use sunscreen'] }
-    ]
+      { day: 2, activities: ['Park visit', 'Local market'], tips: ['Use sunscreen'] },
+    ],
   };
 
   const userPrompt = `
@@ -51,13 +50,13 @@ Provide a structured 3-day itinerary with activities and tips.
     itinerary: [
       { day: 1, activities: ['Local landmark visit'], tips: ['Take photos'] },
       { day: 2, activities: ['Museum tour'], tips: ['Wear comfortable shoes'] },
-      { day: 3, activities: ['Park visit'], tips: ['Carry snacks'] }
-    ]
+      { day: 3, activities: ['Park visit'], tips: ['Carry snacks'] },
+    ],
   };
 };
 
 /**
- * Generate itinerary using Multi-Shot Prompting
+ * Multi-Shot Prompting
  */
 const generateMultiShotTripPlan = async (city, startDate) => {
   const examples = [
@@ -66,17 +65,17 @@ const generateMultiShotTripPlan = async (city, startDate) => {
       startDate: '2025-09-01',
       itinerary: [
         { day: 1, activities: ['Museum visit'], tips: ['Carry water'] },
-        { day: 2, activities: ['City walk'], tips: ['Use sunscreen'] }
-      ]
+        { day: 2, activities: ['City walk'], tips: ['Use sunscreen'] },
+      ],
     },
     {
       city: 'ExampleCity2',
       startDate: '2025-10-01',
       itinerary: [
         { day: 1, activities: ['Park visit'], tips: ['Wear comfortable shoes'] },
-        { day: 2, activities: ['Local market'], tips: ['Carry snacks'] }
-      ]
-    }
+        { day: 2, activities: ['Local market'], tips: ['Carry snacks'] },
+      ],
+    },
   ];
 
   const userPrompt = `
@@ -95,13 +94,13 @@ Provide a structured 3-day itinerary with activities and tips.
     itinerary: [
       { day: 1, activities: ['Local landmark visit'], tips: ['Take photos'] },
       { day: 2, activities: ['Museum tour'], tips: ['Wear comfortable shoes'] },
-      { day: 3, activities: ['Park visit'], tips: ['Carry snacks'] }
-    ]
+      { day: 3, activities: ['Park visit'], tips: ['Carry snacks'] },
+    ],
   };
 };
 
 /**
- * Generate itinerary using Dynamic Prompting
+ * Dynamic Prompting
  */
 const generateDynamicPromptTripPlan = async (city, startDate, preferences = []) => {
   const userPrompt = `
@@ -119,8 +118,40 @@ Return a structured JSON itinerary (3 days) with activities and tips.
     itinerary: [
       { day: 1, activities: ['Local landmark visit'], tips: ['Take photos'] },
       { day: 2, activities: ['Museum tour'], tips: ['Wear comfortable shoes'] },
-      { day: 3, activities: ['Park visit'], tips: ['Carry snacks'] }
-    ]
+      { day: 3, activities: ['Park visit'], tips: ['Carry snacks'] },
+    ],
+  };
+};
+
+/**
+ * Chain-of-Thought Prompting
+ */
+const generateChainOfThoughtTripPlan = async (city, startDate) => {
+  const reasoningSteps = [
+    "Day 1: Start with landmarks and major attractions to maximize sightseeing while fresh.",
+    "Day 2: Visit museums and cultural spots; include short breaks to avoid fatigue.",
+    "Day 3: Relaxing activities like parks or local markets to end trip comfortably."
+  ];
+
+  const userPrompt = `
+Plan a 3-day trip to ${city} starting on ${startDate}.
+Follow these reasoning steps:
+${reasoningSteps.join("\n")}
+Return a structured JSON with day-wise activities, tips, and reasoning.
+`;
+
+  console.log("System Prompt:", systemPrompt);
+  console.log("User Prompt (Chain-of-Thought):", userPrompt);
+
+  return {
+    city,
+    startDate,
+    itinerary: [
+      { day: 1, activities: ["Landmark visits"], tips: ["Start early"] },
+      { day: 2, activities: ["Museum tour"], tips: ["Carry water"] },
+      { day: 3, activities: ["Park visit"], tips: ["Relax and enjoy"] }
+    ],
+    reasoning: reasoningSteps
   };
 };
 
@@ -128,5 +159,6 @@ module.exports = {
   generateZeroShotTripPlan,
   generateOneShotTripPlan,
   generateMultiShotTripPlan,
-  generateDynamicPromptTripPlan
+  generateDynamicPromptTripPlan,
+  generateChainOfThoughtTripPlan
 };
