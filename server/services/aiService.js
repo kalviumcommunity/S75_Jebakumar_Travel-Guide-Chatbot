@@ -1,31 +1,71 @@
 // services/aiService.js
-const { systemPrompt, createUserPrompt } = require('../utils/prompts');
+
+const { systemPrompt, createZeroShotPrompt } = require('../utils/prompts');
 
 /**
- * generateZeroShotTripPlan
- * Zero-Shot Prompting: AI generates itinerary purely from instructions, no examples given
+ * Generate itinerary using Zero-Shot Prompting
  * @param {string} city
  * @param {string} startDate
- * @returns {Object} structured trip JSON
+ * @returns {object} structured JSON itinerary
  */
 const generateZeroShotTripPlan = async (city, startDate) => {
-  // Dynamic user prompt for Zero-Shot
-  const userPrompt = createUserPrompt(city, startDate);
+  const userPrompt = createZeroShotPrompt(city, startDate);
 
-  // Log prompts for verification
-  console.log('--- SYSTEM PROMPT (Zero-Shot) ---\n', systemPrompt);
-  console.log('--- USER PROMPT (Zero-Shot) ---\n', userPrompt);
+  console.log('System Prompt:', systemPrompt);
+  console.log('User Prompt (Zero-Shot):', userPrompt);
 
-  // Dummy structured JSON simulating Zero-Shot response
+  // Dummy structured JSON response
   return {
     city,
     startDate,
     itinerary: [
-      { day: 1, activities: ['Arrival & hotel check-in', 'Explore nearby market'], tips: 'Keep luggage light' },
-      { day: 2, activities: ['Visit historical sites', 'Evening at local park'], tips: 'Take camera for photos' },
-      { day: 3, activities: ['Museum tour', 'Local cuisine tasting'], tips: 'Try street food safely' }
+      { day: 1, activities: ['Local landmark visit'], tips: ['Take photos'] },
+      { day: 2, activities: ['Museum tour'], tips: ['Wear comfortable shoes'] },
+      { day: 3, activities: ['Park visit'], tips: ['Carry snacks'] }
     ]
   };
 };
 
-module.exports = { generateZeroShotTripPlan };
+/**
+ * Generate itinerary using One-Shot Prompting
+ * @param {string} city
+ * @param {string} startDate
+ * @returns {object} structured JSON itinerary
+ */
+const generateOneShotTripPlan = async (city, startDate) => {
+  // Example JSON to guide the AI
+  const example = {
+    city: 'ExampleCity',
+    startDate: '2025-09-01',
+    itinerary: [
+      { day: 1, activities: ['Visit museum', 'City walk'], tips: ['Carry water'] },
+      { day: 2, activities: ['Park visit', 'Local market'], tips: ['Use sunscreen'] }
+    ]
+  };
+
+  const userPrompt = `
+Plan a ${city} trip starting on ${startDate}.
+Follow this example format exactly:
+${JSON.stringify(example)}
+Provide a structured 3-day itinerary with activities and tips.
+`;
+
+  console.log('System Prompt:', systemPrompt);
+  console.log('User Prompt (One-Shot):', userPrompt);
+
+  // Dummy structured JSON response
+  return {
+    city,
+    startDate,
+    itinerary: [
+      { day: 1, activities: ['Local landmark visit'], tips: ['Take photos'] },
+      { day: 2, activities: ['Museum tour'], tips: ['Wear comfortable shoes'] },
+      { day: 3, activities: ['Park visit'], tips: ['Carry snacks'] }
+    ]
+  };
+};
+
+module.exports = {
+  generateZeroShotTripPlan,
+  generateOneShotTripPlan
+};
